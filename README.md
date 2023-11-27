@@ -1,6 +1,6 @@
 # User List App
 
-# This React app fetches a list of users from the JSONPlaceholder API and displays them in a user-friendly format
+## This React app fetches a list of users from the JSONPlaceholder API and displays them in a user-friendly format
 
 ## Usage
 1. Clone the repository:
