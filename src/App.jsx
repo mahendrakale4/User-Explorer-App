@@ -1,38 +1,56 @@
-import { useState, useEffect } from "react";
-import { User } from "./User";
+import { useState } from "react";
+import { useFetch } from "./useFetch";
+const URLS = {
+  USERS: "https://jsonplaceholder.typicode.com/users",
+  POSTS: "https://jsonplaceholder.typicode.com/posts",
+  COMMENTS: "https://jsonplaceholder.typicode.com/comments",
+};
+
 
 function App() {
-  const [users, setusers] = useState([]);
-  const [isloading, setisloading] = useState(true);
+  const [url, setUrl] = useState(URLS.USERS);
 
-  useEffect(() => {
-    setisloading(true);
 
-    const controller = new AbortController();
-    fetch("https://jsonplaceholder.typicode.com/users", {
-      signal: controller.signal,
-    })
-      .then((response) => response.json())
-      .then(setusers)
-      .finally(() => setisloading(false));
-
-    return () => {
-      controller.abort();
-    };
-  }, []);
+  const { data, isLoading, isError } = useFetch(url)
 
   return (
     <>
-      <h1> User List</h1>
-      {isloading ? (
-        <p>...loading</p>
-      ) : (
-        <ul>
-          {users.map((user) => {
-            return <User name={user.name} key={user.id} />;
-          })}
-        </ul>
-      )}
+      <div>
+        <label>
+          <input
+            type="radio"
+            checked={url === URLS.USERS}
+            onChange={() => setUrl(URLS.USERS)}
+          />
+          Users
+        </label>
+        <label>
+          <input
+            type="radio"
+            checked={url === URLS.POSTS}
+            onChange={() => setUrl(URLS.POSTS)}
+          />
+          Posts
+        </label>
+        <label>
+          <input
+            type="radio"
+            checked={url === URLS.COMMENTS}
+            onChange={() => setUrl(URLS.COMMENTS)}
+          />
+          Comments
+        </label>
+      </div>
+      {
+        isLoading ? (
+          <h1>Loading...</h1>
+        ) :
+          isError ? (
+            <h1>Error</h1>
+          ) : (
+            <pre>{JSON.stringify(data, null, 2)}</pre>
+          )
+      }
     </>
   );
 }
